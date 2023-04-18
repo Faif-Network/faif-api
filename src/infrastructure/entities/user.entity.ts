@@ -12,7 +12,7 @@ export class UserEntity {
   @Prop({required: true, unique: true})
   name: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: false, unique: true })
   last_name: string;
 
   @Prop({ required: true, unique: true })

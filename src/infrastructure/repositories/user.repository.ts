@@ -25,7 +25,14 @@ export class UserRepository implements IUserRepository {
   }
 
   async create(user: Partial<UserEntity>): Promise<UserEntity> {
-    const createdUser = new this.userModel(user);
+    const createdUser = new this.userModel({
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      created_at: new Date().getTime(),
+      updated_at: new Date().getTime(),
+      last_name: null
+    });
     return createdUser.save();
   }
 }

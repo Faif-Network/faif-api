@@ -12,8 +12,18 @@ export class UserService {
     return this.userRepository.findOneByEmail(email);
   }
 
-  async create(user: UserEntity): Promise<UserEntity> {
-    return this.userRepository.create(user);
+  async create(payload: CreateDTO): Promise<UserEntity> {
+    return this.userRepository.create({
+      name: payload.name,
+      email: payload.email,
+      password: payload.password
+    });
   }
   
+}
+
+interface CreateDTO {
+  name: string;
+  email: string;
+  password: string;
 }
