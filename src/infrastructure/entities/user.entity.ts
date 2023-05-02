@@ -6,6 +6,9 @@ export type UserDocument = UserEntity & Document;
 @Schema({timestamps: true, collection: 'users'})
 export class UserEntity {
 
+  @Prop({ required: true })
+  id: string;
+
   @Prop({required: true, unique: true})
   email: string;
 

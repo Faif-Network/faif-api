@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 import { UserEntity } from '../entities/user.entity';
 
 export interface IUserRepository {
@@ -25,7 +25,10 @@ export class UserRepository implements IUserRepository {
   }
 
   async create(user: Partial<UserEntity>): Promise<UserEntity> {
+    const user_id = new Types.ObjectId();
     const createdUser = new this.userModel({
+      _id: user_id,
+      id: user_id.toString(),
       name: user.name,
       email: user.email,
       password: user.password,

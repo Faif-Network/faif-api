@@ -23,7 +23,7 @@ export class AuthService {
       throw new HttpException("Invalid credentials", 400);
     }
     
-    const payload = { email: user_exists.email, name: user_exists.name };
+    const payload = { email: user_exists.email, username: user_exists.name, user_id: user_exists.id };
     return {
       access_token: this.jwtService.sign(payload)
     };
