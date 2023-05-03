@@ -8,6 +8,9 @@ export interface IPostRepository {
   searchPosts(): Promise<PostEntity[] | null>;
   findPostById(id: string): Promise<PostEntity | null>;
   findPostsByUserId(user_id: string): Promise<PostEntity[] | null>;
+  incrementNumLikes(id: string): Promise<void>;
+  incrementNumComments(id: string): Promise<void>;
+  incrementNumShares(id: string): Promise<void>;
 }
 
 @Injectable()
@@ -46,12 +49,60 @@ export class PostRepository implements IPostRepository {
     return created_post.save();
   }
   findPostById(id: string): Promise<PostEntity> {
-    return this.postModel.findById(id).exec();
+    return this.postModel.findOne({
+      id,
+      deleted_at: null
+    }).exec();
   }
   findPostsByUserId(user_id: string): Promise<PostEntity[]> {
     return this.postModel.find({
       user_id,
       deleted_at: null
     }).exec();
+  }
+
+  updatePostById(id: string, post: Partial<PostEntity>): Promise<PostEntity> {
+    const updated_post = this.postModel.findOneAndUpdate({
+      id,
+      deleted_at: null
+    }, {
+      content: post.content,
+      attachment: post.attachment,
+      num_likes: post.num_likes,
+      num_comments: post.num_comments,
+      num_shares: post.num_shares,
+      num_views: post.num_views
+    }, {
+      new: true
+    }).exec();
+
+    return updated_post;
+  }
+
+  incrementNumLikes(id: string): Promise<void> {
+    return this.postModel.findOneAndUpdate({
+      id,
+      deleted_at: null
+    }, {
+      $inc: { num_likes: 1 }
+    }).exec() as any;
+  }
+
+  incrementNumComments(id: string): Promise<void> {
+    return this.postModel.findOneAndUpdate({
+      id,
+      deleted_at: null
+    }, {
+      $inc: { num_comments: 1 }
+    }).exec() as any;
+  }
+
+  incrementNumShares(id: string): Promise<void> {
+    return this.postModel.findOneAndUpdate({
+      id,
+      deleted_at: null
+    }, {
+      $inc: { num_shares: 1 }
+    }).exec() as any;
   }
 }

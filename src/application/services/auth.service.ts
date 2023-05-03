@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { HttpException, Injectable, Logger } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
 import { UserService } from "./user.service";
@@ -20,24 +20,26 @@ export class AuthService {
 
     const password_matches = await bcrypt.compare(user.password, user_exists.password);
     if (!password_matches) {
+      Logger.error("Invalid credentials")
       throw new HttpException("Invalid credentials", 400);
     }
     
-    const payload = { email: user_exists.email, username: user_exists.name, user_id: user_exists.id };
+    const payload = { email: user_exists.email, username: user_exists.username, user_id: user_exists.id };
     return {
       access_token: this.jwtService.sign(payload)
     };
   }
 
   async register(payload: RegisterDTO) {
-    const { name, email, password } = payload;
+    const { username, email, password } = payload;
     const user_exists = await this.userService.findByEmail(email);
     if (user_exists) {
+      Logger.error("User already exists")
       throw new HttpException("User already exists", 400);
     }
 
     const password_hashed = await bcrypt.hash(password, 10);
-    const user = await this.userService.create({ name, email, password: password_hashed });
+    const user = await this.userService.create({ username, email, password: password_hashed });
     return user;
   }
 }
@@ -48,7 +50,7 @@ interface LoginDTO {
 }
 
 interface RegisterDTO {
-  name: string;
+  username: string;
   email: string;
   password: string;
 }

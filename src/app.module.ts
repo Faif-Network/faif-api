@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './application/modules/auth.module';
+import { CommentModule } from './application/modules/comment.module';
 import { FeedModule } from './application/modules/feed.module';
 import { UserModule } from './application/modules/user.module';
 
@@ -11,7 +12,8 @@ import { UserModule } from './application/modules/user.module';
     MongooseModule.forRoot('mongodb://localhost/faif'),
     AuthModule,
     UserModule,
-    FeedModule
+    FeedModule,
+    CommentModule
   ],
 })
 export class AppModule {}

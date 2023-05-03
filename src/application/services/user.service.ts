@@ -14,16 +14,27 @@ export class UserService {
 
   async create(payload: CreateDTO): Promise<UserEntity> {
     return this.userRepository.create({
-      name: payload.name,
+      username: payload.username,
       email: payload.email,
       password: payload.password
     });
+  }
+
+  async update(user_id: string, payload: UpdateDTO): Promise<void>{
+    const user = this.userRepository.findOneById(user_id)
   }
   
 }
 
 interface CreateDTO {
-  name: string;
+  username: string;
   email: string;
   password: string;
+}
+
+interface UpdateDTO {
+  username?: string;
+  name?: string;
+  last_name?: string;
+  email?: string;
 }

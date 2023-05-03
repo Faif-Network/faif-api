@@ -25,9 +25,9 @@ export class AuthController {
 
   @Post("/register")
   async register(@Body() body: RegisterControllerDTO) {
-    const { name, email, password } = body;
+    const { username, email, password } = body;
 
-    if (!name) {
+    if (!username) {
       throw new HttpException("Name is required", HttpStatus.BAD_REQUEST);
     }
 
@@ -49,7 +49,7 @@ interface LoginControllerDTO {
 }
 
 interface RegisterControllerDTO {
-  name: string;
+  username: string;
   email: string;
   password: string;
 }

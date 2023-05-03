@@ -6,17 +6,17 @@ import { FeedService } from "../services/feed.service";
 export class FeedController {
 
   constructor(
-    private readonly feedService: FeedService
+    private readonly feedService: FeedService,
   ) { }
   
   @Get("/posts")
-  async feed() {
-    return this.feedService.getFeed();
+  async getFeed() {
+    return await this.feedService.getFeed();
   }
 
   @Post("/posts")
   @UseGuards(JwtAuthGuard)
-  async post(@Body() body: CreatePostDTO, @Req() req) {
+  async createPost(@Body() body: CreatePostDTO, @Req() req) {
 
     const user_id = req.user.user_id;
 
@@ -39,6 +39,14 @@ export class FeedController {
       post_id: post
     }
   }
+
+  @Get("/posts/:post_id/comments")
+  async getCommentsByPostId(@Req() req) {
+    const { post_id } = req.params;
+    return await this.feedService.getCommentsByPostId(post_id);
+  }
+
+
 
 }
 

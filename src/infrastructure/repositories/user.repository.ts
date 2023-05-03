@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId, Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UserEntity } from '../entities/user.entity';
 
 export interface IUserRepository {
   findOneByEmail(email: string): Promise<UserEntity | null>;
-  findOneById(id: ObjectId): Promise<UserEntity | null>;
+  findOneById(id: string): Promise<UserEntity | null>;
   create(user: Partial<UserEntity>): Promise<UserEntity>;
 }
 
@@ -20,8 +20,10 @@ export class UserRepository implements IUserRepository {
     return this.userModel.findOne({ email }).exec();
   }
 
-  async findOneById(id: ObjectId): Promise<UserEntity | null> {
-    return this.userModel.findById(id).exec();
+  async findOneById(id: string): Promise<UserEntity | null> {
+    return this.userModel.findById(
+      new Types.ObjectId(id)
+    ).exec();
   }
 
   async create(user: Partial<UserEntity>): Promise<UserEntity> {
@@ -29,13 +31,25 @@ export class UserRepository implements IUserRepository {
     const createdUser = new this.userModel({
       _id: user_id,
       id: user_id.toString(),
-      name: user.name,
+      username: user.username,
       email: user.email,
       password: user.password,
       created_at: new Date().getTime(),
       updated_at: new Date().getTime(),
+      name: user.name,
       last_name: null
     });
     return createdUser.save();
+  }
+
+  async update(user: Partial<UserEntity>): Promise<void> {
+    await this.userModel.findByIdAndUpdate({
+      id: user.id,
+    }, {
+      name: user.name,
+      last_name: user.last_name,
+      email: user.email,
+      username: user.username
+    })
   }
 }
