@@ -1,5 +1,5 @@
 import { Body, Controller, HttpException, HttpStatus, Post, Req, UseGuards } from "@nestjs/common";
-import { IUserAuth, JwtAuthGuard } from "src/shared/jwt-auth.guard";
+import { IUserAuth, JwtAuthGuard } from "../../shared/jwt-auth.guard";
 import { CommentService } from "../services/comment.service";
 
 @Controller("comments")

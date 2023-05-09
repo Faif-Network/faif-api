@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PostRepository } from "src/infrastructure/repositories/post.repository";
+import { PostRepository } from "../../infrastructure/repositories/post.repository";
 import { CommentService } from "./comment.service";
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from "@nestjs/common";
-import { CommentRepository } from "src/infrastructure/repositories/comment.repository";
-import { PostRepository } from "src/infrastructure/repositories/post.repository";
+import { CommentRepository } from "../../infrastructure/repositories/comment.repository";
+import { PostRepository } from "../../infrastructure/repositories/post.repository";
 
 @Injectable()
 export class CommentService {

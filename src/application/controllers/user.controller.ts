@@ -1,5 +1,5 @@
 import { Body, Controller, Put, Req, UseGuards } from "@nestjs/common";
-import { IUserAuth, JwtAuthGuard } from "src/shared/jwt-auth.guard";
+import { IUserAuth, JwtAuthGuard } from "../../shared/jwt-auth.guard";
 import { UserService } from "../services/user.service";
 
 @Controller("user")
