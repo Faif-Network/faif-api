@@ -15,7 +15,7 @@ import { UserModule } from './application/modules/user.module';
     }),
     MongooseModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
-        uri: process.env.DB_URI,
+        uri: "mongodb+srv://faif-api-1:05qMFSy7CdmZLdkm@cluster0.bu8esco.mongodb.net/faif?retryWrites=true&w=majority"
       }),
       inject: [ConfigService],
     }),
