@@ -1,12 +1,9 @@
-import { NestFactory } from '@nestjs/core';
 import * as dotenv from 'dotenv';
-import { AppModule } from './app.module';
+import { createApp } from './main.azure';
 
 async function bootstrap() {
   dotenv.config()
-  const app = await NestFactory.create(AppModule, {
-    cors: true
-  });
+  const app = await createApp();
   await app.listen(3000);
 }
 bootstrap();
