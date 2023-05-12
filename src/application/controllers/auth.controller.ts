@@ -8,7 +8,7 @@ export class AuthController {
   ) { }
   
   @Post("/login")
-  async login(@Body() body: LoginControllerDTO): Promise<{ access_token: string }> {
+  async login(@Body() body: LoginControllerDTO){
     const { email, password } = body;
 
     if (!email) {
@@ -20,7 +20,11 @@ export class AuthController {
     }
 
     const { access_token } = await this.authService.login(body);
-    return { access_token };
+    return { 
+      data: {
+        access_token 
+      }
+     };
   }
 
   @Post("/register")
@@ -28,7 +32,7 @@ export class AuthController {
     const { username, email, password } = body;
 
     if (!username) {
-      throw new HttpException("Name is required", HttpStatus.BAD_REQUEST);
+      throw new HttpException("Username is required", HttpStatus.BAD_REQUEST);
     }
 
     if (!email) {

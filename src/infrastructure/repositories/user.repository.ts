@@ -36,8 +36,6 @@ export class UserRepository implements IUserRepository {
       password: user.password,
       created_at: new Date().getTime(),
       updated_at: new Date().getTime(),
-      name: user.name,
-      last_name: null
     });
     return createdUser.save();
   }
