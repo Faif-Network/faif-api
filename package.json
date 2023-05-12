@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "start:azure": "npm run build && func host start"
+    "start:azure": "npm run build && func host start",
+    "deploy:dev": "npm run build && func azure functionapp publish FaifBackend"
   },
   "dependencies": {
     "@azure/functions": "^1.0.3",
