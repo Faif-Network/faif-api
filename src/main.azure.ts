@@ -3,7 +3,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 export async function createApp(): Promise<INestApplication> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+  });
   app.setGlobalPrefix('api');
   await app.init();
   return app;

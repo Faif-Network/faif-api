@@ -1,17 +1,37 @@
 import { Injectable } from "@nestjs/common";
 import { PostRepository } from "../../infrastructure/repositories/post.repository";
 import { CommentService } from "./comment.service";
+import { UserService } from "./user.service";
 
 @Injectable()
 export class FeedService {
 
   constructor(
     private readonly postRepository: PostRepository,
-    private readonly commentService: CommentService
-  ) {}
+    private readonly commentService: CommentService,
+    private readonly userService: UserService
+  ) { }
 
-  async getFeed(): Promise<FeedResponse[]> {
+  async getFeed(populate?: string[]): Promise<FeedResponse[]> {
+    console.log('populate', populate);
     const posts = await this.postRepository.searchPosts();
+
+    if (populate && populate.includes('user')) {
+      console.log('populate user');
+      const user_ids = new Set(posts.map(post => post.user_id));
+      const users = await this.userService.searchUsers(Array.from(user_ids));
+      return posts.map(post => ({
+        id: post.id,
+        user_id: post.user_id,
+        content: post.content,
+        attachment: post.attachment,
+        num_likes: post.num_likes,
+        num_comments: post.num_comments,
+        created_at: post.created_at,
+        user: users.find(user => user.id === post.user_id)
+      }));
+    } 
+
     return posts.map(post => ({
       id: post.id,
       user_id: post.user_id,

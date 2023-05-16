@@ -10,8 +10,9 @@ export class FeedController {
   ) { }
   
   @Get("/posts")
-  async getFeed() {
-    const posts = await this.feedService.getFeed();
+  async getFeed(@Req() req) {
+    const { populate } = req.query;
+    const posts = await this.feedService.getFeed(populate ? populate : undefined);
     return {
       message: "Posts retrieved successfully",
       data: posts

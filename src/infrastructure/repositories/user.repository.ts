@@ -26,6 +26,14 @@ export class UserRepository implements IUserRepository {
     ).exec();
   }
 
+  async searchUsers(user_ids: string[]): Promise<UserEntity[]> {
+    return this.userModel.find({
+      id: {
+        $in: user_ids
+      }
+    }).exec();
+  }
+  
   async create(user: Partial<UserEntity>): Promise<UserEntity> {
     const user_id = new Types.ObjectId();
     const createdUser = new this.userModel({
