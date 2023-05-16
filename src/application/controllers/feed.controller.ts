@@ -11,7 +11,11 @@ export class FeedController {
   
   @Get("/posts")
   async getFeed() {
-    return await this.feedService.getFeed();
+    const posts = await this.feedService.getFeed();
+    return {
+      message: "Posts retrieved successfully",
+      data: posts
+    }
   }
 
   @Post("/posts")
@@ -36,17 +40,21 @@ export class FeedController {
 
     return {
       message: "Post created successfully",
-      post_id: post
+      data: {
+        post_id: post,
+      }
     }
   }
 
   @Get("/posts/:post_id/comments")
   async getCommentsByPostId(@Req() req) {
     const { post_id } = req.params;
-    return await this.feedService.getCommentsByPostId(post_id);
+    const comments = await this.feedService.getCommentsByPostId(post_id);
+    return {
+      message: "Comments retrieved successfully",
+      data: comments
+    }
   }
-
-
 
 }
 

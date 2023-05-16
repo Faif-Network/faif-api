@@ -21,10 +21,11 @@ export class AuthController {
 
     const { access_token } = await this.authService.login(body);
     return { 
+      message: "Login successful",
       data: {
         access_token 
       }
-     };
+    };
   }
 
   @Post("/register")
@@ -43,7 +44,15 @@ export class AuthController {
       throw new HttpException("Password is required", HttpStatus.BAD_REQUEST);
     }
 
-    return this.authService.register(body);
+    const user = await this.authService.register(body);
+    return {
+      message: "User created successfully",
+      data: {
+        user_id: user.id,
+        username: user.username,
+        email: user.email
+      }
+    }
   }
 }
 

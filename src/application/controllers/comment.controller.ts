@@ -26,7 +26,9 @@ export class CommentController {
 
     return {
       message: "Comment created successfully",
-      comment_id: comment
+      data: {
+        comment_id: comment
+      }
     }
   }
 }
