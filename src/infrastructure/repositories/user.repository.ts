@@ -13,7 +13,7 @@ export interface IUserRepository {
 export class UserRepository implements IUserRepository {
   constructor(
     @InjectModel(UserEntity.name)
-    private readonly userModel: Model<UserEntity>,
+    private readonly userModel: Model<UserEntity>
   ) {}
 
   async findOneByEmail(email: string): Promise<UserEntity | null> {
@@ -21,19 +21,19 @@ export class UserRepository implements IUserRepository {
   }
 
   async findOneById(id: string): Promise<UserEntity | null> {
-    return this.userModel.findById(
-      new Types.ObjectId(id)
-    ).exec();
+    return this.userModel.findById(new Types.ObjectId(id)).exec();
   }
 
   async searchUsers(user_ids: string[]): Promise<UserEntity[]> {
-    return this.userModel.find({
-      id: {
-        $in: user_ids
-      }
-    }).exec();
+    return this.userModel
+      .find({
+        id: {
+          $in: user_ids,
+        },
+      })
+      .exec();
   }
-  
+
   async create(user: Partial<UserEntity>): Promise<UserEntity> {
     const user_id = new Types.ObjectId();
     const createdUser = new this.userModel({
@@ -49,13 +49,16 @@ export class UserRepository implements IUserRepository {
   }
 
   async update(user: Partial<UserEntity>): Promise<void> {
-    await this.userModel.findByIdAndUpdate({
-      id: user.id,
-    }, {
-      name: user.name,
-      last_name: user.last_name,
-      email: user.email,
-      username: user.username
-    })
+    await this.userModel.findByIdAndUpdate(
+      {
+        id: user.id,
+      },
+      {
+        name: user.name,
+        last_name: user.last_name,
+        email: user.email,
+        username: user.username,
+      }
+    );
   }
 }

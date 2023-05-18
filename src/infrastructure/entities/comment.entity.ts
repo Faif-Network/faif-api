@@ -1,9 +1,9 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export type CommentDocument = CommentEntity & Document
+export type CommentDocument = CommentEntity & Document;
 
-@Schema({timestamps: true, collection: 'comments'})
+@Schema({ timestamps: true, collection: 'comments' })
 export class CommentEntity {
   @Prop({ required: true })
   id: string;
@@ -24,4 +24,4 @@ export class CommentEntity {
   num_likes: number;
 }
 
-export const CommentSchema = SchemaFactory.createForClass(CommentEntity)
+export const CommentSchema = SchemaFactory.createForClass(CommentEntity);

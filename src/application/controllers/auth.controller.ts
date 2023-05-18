@@ -1,58 +1,62 @@
-import { Body, Controller, HttpException, HttpStatus, Post } from "@nestjs/common";
-import { AuthService } from "../services/auth.service";
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
+import { AuthService } from '../services/auth.service';
 
-@Controller("auth")
+@Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService
-  ) { }
-  
-  @Post("/login")
-  async login(@Body() body: LoginControllerDTO){
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('/login')
+  async login(@Body() body: LoginControllerDTO) {
     const { email, password } = body;
 
     if (!email) {
-      throw new HttpException("Email is required", HttpStatus.BAD_REQUEST);
+      throw new HttpException('Email is required', HttpStatus.BAD_REQUEST);
     }
 
     if (!password) {
-      throw new HttpException("Password is required", HttpStatus.BAD_REQUEST);
+      throw new HttpException('Password is required', HttpStatus.BAD_REQUEST);
     }
 
     const { access_token } = await this.authService.login(body);
-    return { 
-      message: "Login successful",
+    return {
+      message: 'Login successful',
       data: {
-        access_token 
-      }
+        access_token,
+      },
     };
   }
 
-  @Post("/register")
+  @Post('/register')
   async register(@Body() body: RegisterControllerDTO) {
     const { username, email, password } = body;
 
     if (!username) {
-      throw new HttpException("Username is required", HttpStatus.BAD_REQUEST);
+      throw new HttpException('Username is required', HttpStatus.BAD_REQUEST);
     }
 
     if (!email) {
-      throw new HttpException("Email is required", HttpStatus.BAD_REQUEST);
+      throw new HttpException('Email is required', HttpStatus.BAD_REQUEST);
     }
 
     if (!password) {
-      throw new HttpException("Password is required", HttpStatus.BAD_REQUEST);
+      throw new HttpException('Password is required', HttpStatus.BAD_REQUEST);
     }
 
     const user = await this.authService.register(body);
     return {
-      message: "User created successfully",
+      message: 'User created successfully',
       data: {
         user_id: user.id,
         username: user.username,
-        email: user.email
-      }
-    }
+        email: user.email,
+      },
+    };
   }
 }
 
@@ -66,4 +70,3 @@ interface RegisterControllerDTO {
   email: string;
   password: string;
 }
-

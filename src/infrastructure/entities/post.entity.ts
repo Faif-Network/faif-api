@@ -3,9 +3,8 @@ import { Document } from 'mongoose';
 
 export type PostDocument = PostEntity & Document;
 
-@Schema({timestamps: true, collection: 'posts'})
+@Schema({ timestamps: true, collection: 'posts' })
 export class PostEntity {
-
   @Prop({ required: true })
   id: string;
 

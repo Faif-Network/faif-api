@@ -3,19 +3,23 @@ import { Document } from 'mongoose';
 
 export type UserDocument = UserEntity & Document;
 
-@Schema({timestamps: true, collection: 'users'})
+@Schema({ timestamps: true, collection: 'users' })
 export class UserEntity {
-
   @Prop({ required: true })
   id: string;
 
-  @Prop({required: true, unique: true})
+  @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({required: true, unique: true})
+  @Prop({ required: true, unique: true })
   username: string;
 
-  @Prop({required: false, unique: true, default: 'https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg'})
+  @Prop({
+    required: false,
+    unique: true,
+    default:
+      'https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg',
+  })
   avatar: string;
 
   @Prop({ required: false, unique: false })

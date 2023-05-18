@@ -1,32 +1,37 @@
-import { HttpException, Injectable, Logger } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { UserService } from "./user.service";
-
+import { UserService } from './user.service';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService
-  ) { }
+  ) {}
 
   async login(user: LoginDTO): Promise<{ access_token: string }> {
     const user_exists = await this.userService.findByEmail(user.email);
     if (!user_exists) {
-      throw new HttpException("User not found", 404);
+      throw new HttpException('User not found', 404);
     }
 
-    const password_matches = await bcrypt.compare(user.password, user_exists.password);
+    const password_matches = await bcrypt.compare(
+      user.password,
+      user_exists.password
+    );
     if (!password_matches) {
-      Logger.error("Invalid credentials")
-      throw new HttpException("Invalid credentials", 400);
+      Logger.error('Invalid credentials');
+      throw new HttpException('Invalid credentials', 400);
     }
-    
-    const payload = { email: user_exists.email, username: user_exists.username, user_id: user_exists.id };
+
+    const payload = {
+      email: user_exists.email,
+      username: user_exists.username,
+      user_id: user_exists.id,
+    };
     return {
-      access_token: this.jwtService.sign(payload)
+      access_token: this.jwtService.sign(payload),
     };
   }
 
@@ -34,12 +39,16 @@ export class AuthService {
     const { username, email, password } = payload;
     const user_exists = await this.userService.findByEmail(email);
     if (user_exists) {
-      Logger.error("User already exists")
-      throw new HttpException("User already exists", 400);
+      Logger.error('User already exists');
+      throw new HttpException('User already exists', 400);
     }
 
     const password_hashed = await bcrypt.hash(password, 10);
-    const user = await this.userService.create({ username, email, password: password_hashed });
+    const user = await this.userService.create({
+      username,
+      email,
+      password: password_hashed,
+    });
     return user;
   }
 }

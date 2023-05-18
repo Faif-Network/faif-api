@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import { createApp } from './main.azure';
 
 async function bootstrap() {
-  dotenv.config()
+  dotenv.config();
   const app = await createApp();
   await app.listen(3000);
 }

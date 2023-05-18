@@ -4,7 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './application/modules/auth.module';
 import { ChatModule } from './application/modules/chat.module';
 import { CommentModule } from './application/modules/comment.module';
-import { FeedModule } from './application/modules/feed.module';
+import { LikeModule } from './application/modules/like.module';
+import { PostModule } from './application/modules/post.module';
 import { UserModule } from './application/modules/user.module';
 
 @Module({
@@ -21,9 +22,10 @@ import { UserModule } from './application/modules/user.module';
     }),
     AuthModule,
     UserModule,
-    FeedModule,
+    PostModule,
     CommentModule,
-    ChatModule
+    ChatModule,
+    LikeModule,
   ],
 })
 export class AppModule {}

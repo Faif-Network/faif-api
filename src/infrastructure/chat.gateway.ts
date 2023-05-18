@@ -1,10 +1,18 @@
-import { Logger } from "@nestjs/common";
-import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Server, Socket } from "socket.io";
+import { Logger } from '@nestjs/common';
+import {
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway()
-export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-
+export class ChatGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer() server: Server;
   private logger = new Logger('ChatGateway');
 
@@ -21,7 +29,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage('chat')
-  handleChat(client: Socket, message: {sender: string, receiver: string, message: string}) {
+  handleChat(
+    client: Socket,
+    message: { sender: string; receiver: string; message: string }
+  ) {
     this.server.to(message.receiver).emit('chat', message);
   }
 
@@ -34,5 +45,4 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   handleLeave(client: Socket, room: string) {
     client.leave(room);
   }
-
 }

@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, Types } from "mongoose";
-import { PostEntity } from "../entities/post.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { PostEntity } from '../entities/post.entity';
 
 export interface IPostRepository {
   createPost(post: Partial<PostEntity>): Promise<PostEntity>;
@@ -15,22 +15,23 @@ export interface IPostRepository {
 
 @Injectable()
 export class PostRepository implements IPostRepository {
-
   constructor(
     @InjectModel(PostEntity.name)
-    private readonly postModel: Model<PostEntity>,
-  ) { }
-  
+    private readonly postModel: Model<PostEntity>
+  ) {}
+
   searchPosts(): Promise<PostEntity[]> {
-    return this.postModel.find({
-      deleted_at: null
-    }).exec();
+    return this.postModel
+      .find({
+        deleted_at: null,
+      })
+      .sort({ created_at: -1 })
+      .exec();
   }
 
   createPost(post: Partial<PostEntity>): Promise<PostEntity> {
-    
     // Generate id for the post
-    const post_id = new Types.ObjectId()
+    const post_id = new Types.ObjectId();
 
     const created_post = new this.postModel({
       _id: post_id,
@@ -43,66 +44,108 @@ export class PostRepository implements IPostRepository {
       num_comments: 0,
       num_shares: 0,
       num_views: 0,
-      deleted_at: null
+      deleted_at: null,
     });
 
     return created_post.save();
   }
+
   findPostById(id: string): Promise<PostEntity> {
-    return this.postModel.findOne({
-      id,
-      deleted_at: null
-    }).exec();
+    return this.postModel
+      .findOne({
+        id,
+        deleted_at: null,
+      })
+      .exec();
   }
+
   findPostsByUserId(user_id: string): Promise<PostEntity[]> {
-    return this.postModel.find({
-      user_id,
-      deleted_at: null
-    }).exec();
+    return this.postModel
+      .find({
+        user_id,
+        deleted_at: null,
+      })
+      .exec();
   }
 
   updatePostById(id: string, post: Partial<PostEntity>): Promise<PostEntity> {
-    const updated_post = this.postModel.findOneAndUpdate({
-      id,
-      deleted_at: null
-    }, {
-      content: post.content,
-      attachment: post.attachment,
-      num_likes: post.num_likes,
-      num_comments: post.num_comments,
-      num_shares: post.num_shares,
-      num_views: post.num_views
-    }, {
-      new: true
-    }).exec();
+    const updated_post = this.postModel
+      .findOneAndUpdate(
+        {
+          id,
+          deleted_at: null,
+        },
+        {
+          content: post.content,
+          attachment: post.attachment,
+          num_likes: post.num_likes,
+          num_comments: post.num_comments,
+          num_shares: post.num_shares,
+          num_views: post.num_views,
+        },
+        {
+          new: true,
+        }
+      )
+      .exec();
 
     return updated_post;
   }
 
   incrementNumLikes(id: string): Promise<void> {
-    return this.postModel.findOneAndUpdate({
-      id,
-      deleted_at: null
-    }, {
-      $inc: { num_likes: 1 }
-    }).exec() as any;
+    return this.postModel
+      .findOneAndUpdate(
+        {
+          id,
+          deleted_at: null,
+        },
+        {
+          $inc: { num_likes: 1 },
+        }
+      )
+      .exec() as any;
+  }
+
+  decrementNumLikes(id: string): Promise<void> {
+    return this.postModel
+      .findOneAndUpdate(
+        {
+          id,
+          deleted_at: null,
+          num_likes: { $gt: 0 }, // Asegura que num_likes sea mayor que 0
+        },
+        {
+          $inc: { num_likes: -1 },
+        }
+      )
+      .exec() as any;
   }
 
   incrementNumComments(id: string): Promise<void> {
-    return this.postModel.findOneAndUpdate({
-      id,
-      deleted_at: null
-    }, {
-      $inc: { num_comments: 1 }
-    }).exec() as any;
+    return this.postModel
+      .findOneAndUpdate(
+        {
+          id,
+          deleted_at: null,
+        },
+        {
+          $inc: { num_comments: 1 },
+        }
+      )
+      .exec() as any;
   }
 
   incrementNumShares(id: string): Promise<void> {
-    return this.postModel.findOneAndUpdate({
-      id,
-      deleted_at: null
-    }, {
-      $inc: { num_shares: 1 }
-    }).exec() as any;
+    return this.postModel
+      .findOneAndUpdate(
+        {
+          id,
+          deleted_at: null,
+        },
+        {
+          $inc: { num_shares: 1 },
+        }
+      )
+      .exec() as any;
   }
 }
