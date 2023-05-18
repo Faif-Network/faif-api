@@ -49,8 +49,9 @@ export class FeedController {
 
   @Get("/posts/:post_id/comments")
   async getCommentsByPostId(@Req() req) {
+    const { populate } = req.query;
     const { post_id } = req.params;
-    const comments = await this.feedService.getCommentsByPostId(post_id);
+    const comments = await this.feedService.getCommentsByPostId(post_id, populate ? populate : undefined);
     return {
       message: "Comments retrieved successfully",
       data: comments

@@ -13,11 +13,9 @@ export class FeedService {
   ) { }
 
   async getFeed(populate?: string[]): Promise<FeedResponse[]> {
-    console.log('populate', populate);
     const posts = await this.postRepository.searchPosts();
 
     if (populate && populate.includes('user')) {
-      console.log('populate user');
       const user_ids = new Set(posts.map(post => post.user_id));
       const users = await this.userService.searchUsers(Array.from(user_ids));
       return posts.map(post => ({
@@ -51,8 +49,8 @@ export class FeedService {
     }).then(post => post.id);
   }
 
-  async getCommentsByPostId(post_id: string) {
-    return this.commentService.getCommentsByPostId(post_id);
+  async getCommentsByPostId(post_id: string, populate?: string[]) {
+    return this.commentService.getCommentsByPostId(post_id, populate);
   }
 }
 
