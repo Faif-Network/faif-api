@@ -69,10 +69,10 @@ export class PostService {
     post_id: string,
     payload: CreateCommentDTO
   ): Promise<void> {
-    await this.commentService.createComment(post_id, {
-      user_id: payload.user_id,
-      content: payload.content,
-    });
+    await Promise.all([
+      this.commentService.createComment(post_id, payload),
+      this.postRepository.incrementNumComments(post_id),
+    ]);
   }
 
   async likePost(post_id: string, user_id: string): Promise<void> {
