@@ -1,3 +1,4 @@
+import { BlobSASPermissions, BlobServiceClient } from '@azure/storage-blob';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -49,7 +50,31 @@ export class AuthService {
       email,
       password: password_hashed,
     });
-    return user;
+
+    const blob_connn = process.env.AZURE_CONNECTION_STRING;
+    if (!blob_connn) throw new Error('No blob connection string');
+    const blob_service_client =
+      BlobServiceClient.fromConnectionString(blob_connn);
+
+    // Generate signed url for blob storage upload (profile picture)
+    const container_client = blob_service_client.getContainerClient('avatars');
+    const blob_name = `${user.id}.jpg`;
+    const blob_client = container_client.getBlockBlobClient(blob_name);
+    const sas_token = await blob_client.generateSasUrl({
+      permissions: BlobSASPermissions.parse('racwd'),
+      expiresOn: new Date(new Date().valueOf() + 86400), // 24 hours
+    });
+
+    return {
+      id: user.id,
+      avatar_upload_url: sas_token,
+      username: user.username,
+      acces_token: this.jwtService.sign({
+        email: user.email,
+        username: user.username,
+        user_id: user.id,
+      }),
+    };
   }
 }
 

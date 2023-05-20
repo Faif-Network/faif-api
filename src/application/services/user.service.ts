@@ -10,6 +10,16 @@ export class UserService {
     return this.userRepository.findOneByEmail(email);
   }
 
+  async findById(user_id: string): Promise<Partial<UserEntity> | null> {
+    const user = await this.userRepository.findOneById(user_id);
+    return {
+      username: user.username,
+      name: user.name,
+      last_name: user.last_name,
+      avatar: user.avatar,
+    };
+  }
+
   async create(payload: CreateDTO): Promise<UserEntity> {
     return this.userRepository.create({
       username: payload.username,

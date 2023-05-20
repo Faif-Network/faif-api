@@ -52,9 +52,10 @@ export class AuthController {
     return {
       message: 'User created successfully',
       data: {
+        avatar: user.avatar_upload_url,
         user_id: user.id,
         username: user.username,
-        email: user.email,
+        access_token: user.acces_token,
       },
     };
   }
