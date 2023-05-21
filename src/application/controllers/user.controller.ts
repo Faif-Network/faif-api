@@ -1,21 +1,20 @@
 import { Body, Controller, Get, Put, Req, UseGuards } from '@nestjs/common';
-import { IUserAuth, JwtAuthGuard } from '../../shared/jwt-auth.guard';
+import { JwtAuthGuard } from '../../shared/jwt-auth.guard';
 import { UserService } from '../services/user.service';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Put('/me')
+  @Get()
   @UseGuards(JwtAuthGuard)
-  async update(@Body() body: UpdateControllerDTO, @Req() req) {
-    const { user_id } = req.user as IUserAuth;
-    const { name, last_name, username, email } = body;
-
-    await this.userService.update(user_id, {
-      name,
-      last_name,
-    });
+  async findMe(@Req() req) {
+    const { user_id } = req.user;
+    const user = await this.userService.findMe(user_id);
+    return {
+      message: 'User retrieved successfully',
+      data: user,
+    };
   }
 
   @Get('/:user_id')
@@ -28,11 +27,22 @@ export class UserController {
       data: user,
     };
   }
-}
 
-interface UpdateControllerDTO {
-  username: string;
-  name: string;
-  last_name: string;
-  email: string;
+  @Put()
+  @UseGuards(JwtAuthGuard)
+  async update(@Req() req, @Body() body) {
+    const { user_id } = req.user;
+    const { username, name, last_name, avatar, biography } = body;
+    const user = await this.userService.update(user_id, {
+      username,
+      name,
+      last_name,
+      avatar,
+      biography,
+    });
+    return {
+      message: 'User updated successfully',
+      data: user,
+    };
+  }
 }

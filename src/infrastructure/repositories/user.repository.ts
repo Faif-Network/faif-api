@@ -48,16 +48,17 @@ export class UserRepository implements IUserRepository {
     return createdUser.save();
   }
 
-  async update(user: Partial<UserEntity>): Promise<void> {
-    await this.userModel.findByIdAndUpdate(
+  async update(user_id: string, user: Partial<UserEntity>): Promise<void> {
+    await this.userModel.findOneAndUpdate(
       {
-        id: user.id,
+        id: user_id,
       },
       {
         name: user.name,
         last_name: user.last_name,
         email: user.email,
         username: user.username,
+        biography: user.biography,
       }
     );
   }
