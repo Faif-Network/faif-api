@@ -21,9 +21,10 @@ export class PostController {
   @UseGuards(OptionalJwtAuthGuard)
   async getFeed(@Req() req) {
     const { user_id } = req.user;
-    const { populate } = req.query;
+    const { populate, filter } = req.query;
     const posts = await this.feedService.getFeed(
       populate ? populate : undefined,
+      filter ? filter : undefined,
       user_id ? user_id : undefined
     );
     return {

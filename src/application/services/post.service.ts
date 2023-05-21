@@ -17,9 +17,10 @@ export class PostService {
 
   async getFeed(
     populate?: string[],
+    filter?: string[],
     user_id?: string
   ): Promise<FeedResponse[]> {
-    const posts = await this.postRepository.searchPosts();
+    const posts = await this.postRepository.searchPosts(filter);
     const postIds = posts.map((post) => post.id);
     let likesPromise: Promise<LikeEntity[]>;
     let usersPromise: Promise<Partial<UserEntity>[]>;

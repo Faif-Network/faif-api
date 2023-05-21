@@ -20,7 +20,17 @@ export class PostRepository implements IPostRepository {
     private readonly postModel: Model<PostEntity>
   ) {}
 
-  searchPosts(): Promise<PostEntity[]> {
+  searchPosts(filter?: string[]): Promise<PostEntity[]> {
+    if (filter && filter['user']) {
+      return this.postModel
+        .find({
+          deleted_at: null,
+          user_id: filter['user'],
+        })
+        .sort({ created_at: -1 })
+        .exec();
+    }
+
     return this.postModel
       .find({
         deleted_at: null,

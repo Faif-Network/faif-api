@@ -13,6 +13,7 @@ export class UserService {
   async findMe(user_id: string): Promise<Partial<UserEntity> | null> {
     const user = await this.userRepository.findOneById(user_id);
     return {
+      id: user.id,
       username: user.username,
       name: user.name,
       last_name: user.last_name,

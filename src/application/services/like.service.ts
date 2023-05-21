@@ -21,7 +21,11 @@ export class LikeService {
     return this.likeRepository.findLikeByPostIdAndUserId(post_id, user_id);
   }
 
-  async findLikesByPostIdsAndUserId(post_ids: string[], user_id: string) {
+  async findLikesByPostIdsAndUserId(
+    post_ids: string[],
+    user_id: string,
+    filter?: string[]
+  ) {
     return await this.likeRepository.findLikesByPostIdsAndUserId(
       post_ids,
       user_id
