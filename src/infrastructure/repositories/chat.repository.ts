@@ -40,6 +40,7 @@ export class ChatRepository {
       id: chat_id.toString(),
       users: chat.users,
       created_at: new Date().getTime(),
+      updated_at: new Date().getTime(),
       messages: [],
     });
 
