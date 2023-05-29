@@ -5,6 +5,10 @@ import {
   CommentSchema,
 } from '../../infrastructure/entities/comment.entity';
 import {
+  CommunityEntity,
+  CommunitySchema,
+} from '../../infrastructure/entities/community.entity';
+import {
   LikeEntity,
   LikeSchema,
 } from '../../infrastructure/entities/like.entity';
@@ -17,6 +21,7 @@ import {
   UserSchema,
 } from '../../infrastructure/entities/user.entity';
 import { CommentRepository } from '../../infrastructure/repositories/comment.repository';
+import { CommunityRepository } from '../../infrastructure/repositories/community.repository';
 import { LikeRepository } from '../../infrastructure/repositories/like.repository';
 import { PostRepository } from '../../infrastructure/repositories/post.repository';
 import { UserRepository } from '../../infrastructure/repositories/user.repository';
@@ -33,6 +38,7 @@ import { UserService } from '../services/user.service';
       { name: CommentEntity.name, schema: CommentSchema },
       { name: UserEntity.name, schema: UserSchema },
       { name: LikeEntity.name, schema: LikeSchema },
+      { name: CommunityEntity.name, schema: CommunitySchema },
     ]),
   ],
   controllers: [PostController],
@@ -45,6 +51,7 @@ import { UserService } from '../services/user.service';
     UserRepository,
     LikeService,
     LikeRepository,
+    CommunityRepository,
   ],
   exports: [PostService],
 })

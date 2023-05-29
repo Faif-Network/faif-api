@@ -18,6 +18,7 @@ import { UserModule } from './application/modules/user.module';
       useFactory: async (configService: ConfigService) => ({
         uri: process.env.DB_URI,
       }),
+
       inject: [ConfigService],
     }),
     AuthModule,
