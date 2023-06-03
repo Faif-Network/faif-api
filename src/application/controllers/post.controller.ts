@@ -58,7 +58,7 @@ export class PostController {
     return {
       message: 'Post created successfully',
       data: {
-        post_id: post,
+        post,
       },
     };
   }

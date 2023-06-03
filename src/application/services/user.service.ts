@@ -49,10 +49,10 @@ export class UserService {
       biography: user.biography,
       community_id: user.community_id,
       community: {
-        id: community?.id,
-        name: community?.name,
-        slug: community?.slug,
-        icon: community?.icon,
+        id: community.id,
+        name: community.name,
+        slug: community.slug,
+        icon: community.icon,
       },
     };
   }

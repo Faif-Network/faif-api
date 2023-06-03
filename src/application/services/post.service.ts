@@ -1,3 +1,4 @@
+import { BlobSASPermissions, BlobServiceClient } from '@azure/storage-blob';
 import { Injectable } from '@nestjs/common';
 import { LikeEntity } from 'src/infrastructure/entities/like.entity';
 import { UserEntity } from 'src/infrastructure/entities/user.entity';
@@ -5,7 +6,6 @@ import { PostRepository } from '../../infrastructure/repositories/post.repositor
 import { CommentService, CreateCommentDTO } from './comment.service';
 import { LikeService } from './like.service';
 import { UserService } from './user.service';
-
 @Injectable()
 export class PostService {
   constructor(
@@ -52,14 +52,48 @@ export class PostService {
     }));
   }
 
-  async createPost(payload: CreatePostDTO): Promise<string> {
-    return this.postRepository
-      .createPost({
-        user_id: payload.user_id,
-        content: payload.content,
-        attachment: payload.attachment,
-      })
-      .then((post) => post.id);
+  async createPost(
+    payload: CreatePostDTO
+  ): Promise<{ id: string; attachment_url: string }> {
+    let attachment_url: string | null = null;
+    let public_url: string | null = null;
+    if (payload.attachment) {
+      const blob_conn = process.env.AZURE_CONNECTION_STRING;
+      if (!blob_conn) {
+        throw new Error('Azure connection string is not defined');
+      }
+
+      const blob_service_client =
+        BlobServiceClient.fromConnectionString(blob_conn);
+
+      const container_client =
+        blob_service_client.getContainerClient('attachments');
+      const blob_name = `${new Date().valueOf()}-${payload.user_id}.${
+        payload.attachment.split('/')[1]
+      }`;
+      const block_blob_client = container_client.getBlockBlobClient(blob_name);
+
+      // Generate SAS token for the blob
+      attachment_url = await block_blob_client.generateSasUrl({
+        permissions: BlobSASPermissions.parse('racwd'),
+        expiresOn: new Date(new Date().valueOf() + 86400),
+        contentType:
+          payload.attachment?.split('.').pop() || 'application/octet-stream',
+      });
+
+      public_url = block_blob_client.url;
+    }
+
+    const post = await this.postRepository.createPost({
+      user_id: payload.user_id,
+      content: payload.content,
+      attachment: payload.attachment ? public_url : null,
+    });
+
+    return {
+      id: post.id,
+      attachment_url,
+    };
   }
 
   async getCommentsByPostId(post_id: string, populate?: string[]) {
