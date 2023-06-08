@@ -34,6 +34,9 @@ export class PostEntity {
 
   @Prop({ required: false })
   deleted_at: number;
+
+  @Prop({ required: false })
+  attachment_type: string;
 }
 
 export const PostSchema = SchemaFactory.createForClass(PostEntity);

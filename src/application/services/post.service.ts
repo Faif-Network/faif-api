@@ -47,6 +47,7 @@ export class PostService {
       num_likes: post.num_likes,
       num_comments: post.num_comments,
       created_at: post.created_at,
+      attachment_type: post.attachment_type,
       ...(likes && { liked: !!likes.find((like) => like.post_id === post.id) }),
       ...(users && { user: users.find((user) => user.id === post.user_id) }),
     }));
@@ -83,11 +84,22 @@ export class PostService {
 
       public_url = block_blob_client.url;
     }
+    let attachment_type: string | null = null;
+    if (payload.attachment && payload.attachment === 'image/png') {
+      attachment_type = 'image';
+    } else if (payload.attachment && payload.attachment === 'image/jpeg') {
+      attachment_type = 'image';
+    } else if (payload.attachment && payload.attachment === 'image/jpg') {
+      attachment_type = 'image';
+    } else if (payload.attachment && payload.attachment === 'application/pdf') {
+      attachment_type = 'pdf';
+    }
 
     const post = await this.postRepository.createPost({
       user_id: payload.user_id,
       content: payload.content,
       attachment: payload.attachment ? public_url : null,
+      attachment_type,
     });
 
     return {

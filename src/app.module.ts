@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './application/modules/auth.module';
 import { ChatModule } from './application/modules/chat.module';
 import { CommentModule } from './application/modules/comment.module';
+import { ExplorerModule } from './application/modules/explorer.module';
+import { FollowersModule } from './application/modules/followers.module';
 import { LikeModule } from './application/modules/like.module';
 import { PostModule } from './application/modules/post.module';
 import { UserModule } from './application/modules/user.module';
@@ -27,6 +29,8 @@ import { UserModule } from './application/modules/user.module';
     CommentModule,
     ChatModule,
     LikeModule,
+    ExplorerModule,
+    FollowersModule,
   ],
 })
 export class AppModule {}

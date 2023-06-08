@@ -49,6 +49,7 @@ export class PostRepository implements IPostRepository {
       user_id: post.user_id,
       content: post.content,
       attachment: post.attachment,
+      attachment_type: post.attachment_type,
       created_at: new Date().getTime(),
       num_likes: 0,
       num_comments: 0,
