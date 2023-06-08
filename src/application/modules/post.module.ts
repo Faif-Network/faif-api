@@ -1,6 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
+  PollEntity,
+  PollSchema,
+} from 'src/infrastructure/entities/poll.entity';
+import { PollRepository } from 'src/infrastructure/repositories/poll.repository';
+import {
   CommentEntity,
   CommentSchema,
 } from '../../infrastructure/entities/comment.entity';
@@ -28,6 +33,7 @@ import { UserRepository } from '../../infrastructure/repositories/user.repositor
 import { PostController } from '../controllers/post.controller';
 import { CommentService } from '../services/comment.service';
 import { LikeService } from '../services/like.service';
+import { PollService } from '../services/poll.service';
 import { PostService } from '../services/post.service';
 import { UserService } from '../services/user.service';
 
@@ -39,6 +45,7 @@ import { UserService } from '../services/user.service';
       { name: UserEntity.name, schema: UserSchema },
       { name: LikeEntity.name, schema: LikeSchema },
       { name: CommunityEntity.name, schema: CommunitySchema },
+      { name: PollEntity.name, schema: PollSchema },
     ]),
   ],
   controllers: [PostController],
@@ -52,6 +59,8 @@ import { UserService } from '../services/user.service';
     LikeService,
     LikeRepository,
     CommunityRepository,
+    PollService,
+    PollRepository,
   ],
   exports: [PostService],
 })

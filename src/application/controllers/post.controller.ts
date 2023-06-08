@@ -11,11 +11,15 @@ import {
 import { OptionalJwtAuthGuard } from 'src/shared/optional-jwt-auth.guard';
 import { JwtAuthGuard } from '../../shared/jwt-auth.guard';
 import { CreateCommentDTO } from '../services/comment.service';
+import { PollService } from '../services/poll.service';
 import { PostService } from '../services/post.service';
 
 @Controller('feed')
 export class PostController {
-  constructor(private readonly feedService: PostService) {}
+  constructor(
+    private readonly feedService: PostService,
+    private readonly pollService: PollService
+  ) {}
 
   @Get('/posts')
   @UseGuards(OptionalJwtAuthGuard)
@@ -27,9 +31,20 @@ export class PostController {
       filter ? filter : undefined,
       user_id ? user_id : undefined
     );
+    const polls = await this.pollService.getPolls(
+      populate ? populate : undefined
+    );
+
+    // Merge posts and polls into one array and sort by created_at
+    const feed = [...posts, ...polls].sort((a, b) => {
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    });
+
     return {
       message: 'Posts retrieved successfully',
-      data: posts,
+      data: feed,
     };
   }
 
@@ -116,6 +131,61 @@ export class PostController {
 
     return {
       message: 'Post liked successfully',
+      data: null,
+    };
+  }
+
+  @Post('/polls')
+  @UseGuards(JwtAuthGuard)
+  async createPoll(@Req() req) {
+    const { user_id } = req.user;
+    const { question, options, attachment_type } = req.body;
+
+    if (!question) {
+      throw new HttpException('Question is required', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!options) {
+      throw new HttpException('Options are required', HttpStatus.BAD_REQUEST);
+    }
+
+    const poll = await this.pollService.createPoll({
+      user_id,
+      question,
+      options,
+      attachment_type,
+    });
+
+    return {
+      message: 'Poll created successfully',
+      data: {
+        poll_id: poll,
+      },
+    };
+  }
+
+  @Post('/polls/:poll_id/votes')
+  @UseGuards(JwtAuthGuard)
+  async votePoll(@Req() req) {
+    const { user_id } = req.user;
+    const { poll_id } = req.params;
+    const { option } = req.body;
+
+    if (!poll_id) {
+      throw new HttpException('Poll id is required', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!option) {
+      throw new HttpException('Option  is required', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.pollService.submitVote(poll_id, {
+      option,
+      user_id,
+    });
+
+    return {
+      message: 'Poll voted successfully',
       data: null,
     };
   }
