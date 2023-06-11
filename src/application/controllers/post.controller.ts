@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -75,6 +76,17 @@ export class PostController {
       data: {
         post,
       },
+    };
+  }
+
+  @Get('/posts/:post_id')
+  @UseGuards(OptionalJwtAuthGuard)
+  async getPostById(@Req() req) {
+    const { post_id } = req.params;
+    const post = await this.feedService.getPostById(post_id);
+    return {
+      message: 'Post retrieved successfully',
+      data: post,
     };
   }
 
@@ -186,6 +198,24 @@ export class PostController {
 
     return {
       message: 'Poll voted successfully',
+      data: null,
+    };
+  }
+
+  @Delete('/posts/:post_id')
+  @UseGuards(JwtAuthGuard)
+  async deletePost(@Req() req) {
+    const { user_id } = req.user;
+    const { post_id } = req.params;
+
+    if (!post_id) {
+      throw new HttpException('Post id is required', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.feedService.deletePost(post_id, user_id);
+
+    return {
+      message: 'Post deleted successfully',
       data: null,
     };
   }

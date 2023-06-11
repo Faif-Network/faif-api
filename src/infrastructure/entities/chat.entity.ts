@@ -12,14 +12,6 @@ export class ChatEntity {
   users: string[];
 
   @Prop({ required: true })
-  messages: {
-    sender: string;
-    receiver: string;
-    message: string;
-    created_at: number;
-  }[];
-
-  @Prop({ required: true })
   created_at: number;
 
   @Prop({ required: true })

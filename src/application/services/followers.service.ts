@@ -6,7 +6,6 @@ export class FollowersService {
   constructor(private readonly followersRepository: FollowersRepository) {}
 
   async createFollower(user_id: string, follower_id: string): Promise<void> {
-    console.table({ user_id, follower_id });
     const is_following = await this.followersRepository.isUserFollowing(
       user_id,
       follower_id

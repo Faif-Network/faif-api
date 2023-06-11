@@ -1,6 +1,7 @@
 import { BlobSASPermissions, BlobServiceClient } from '@azure/storage-blob';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { LikeEntity } from 'src/infrastructure/entities/like.entity';
+import { PostEntity } from 'src/infrastructure/entities/post.entity';
 import { UserEntity } from 'src/infrastructure/entities/user.entity';
 import { PostRepository } from '../../infrastructure/repositories/post.repository';
 import { CommentService, CreateCommentDTO } from './comment.service';
@@ -140,6 +141,28 @@ export class PostService {
       this.likeService.createLike(post_id, user_id),
       this.postRepository.incrementNumLikes(post_id),
     ]);
+  }
+
+  async deletePost(post_id: string, user_id: string): Promise<void> {
+    const post = await this.postRepository.findPostById(post_id);
+    if (!post) {
+      throw new HttpException('Post not found', 404);
+    }
+
+    if (post.user_id !== user_id) {
+      throw new HttpException('Unauthorized', 401);
+    }
+
+    await this.postRepository.deletePostById(post_id);
+  }
+
+  async getPostById(post_id: string): Promise<PostEntity> {
+    const post = await this.postRepository.findPostById(post_id);
+    if (!post) {
+      throw new HttpException('Post not found', 404);
+    }
+
+    return post;
   }
 }
 

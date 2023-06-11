@@ -40,7 +40,6 @@ export class PostRepository implements IPostRepository {
   }
 
   createPost(post: Partial<PostEntity>): Promise<PostEntity> {
-    // Generate id for the post
     const post_id = new Types.ObjectId();
 
     const created_post = new this.postModel({
@@ -158,5 +157,22 @@ export class PostRepository implements IPostRepository {
         }
       )
       .exec() as any;
+  }
+
+  deletePostById(id: string): Promise<PostEntity> {
+    return this.postModel
+      .findOneAndUpdate(
+        {
+          id,
+          deleted_at: null,
+        },
+        {
+          deleted_at: new Date().getTime(),
+        },
+        {
+          new: true,
+        }
+      )
+      .exec();
   }
 }
