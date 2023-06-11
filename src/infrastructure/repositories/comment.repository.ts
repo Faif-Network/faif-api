@@ -15,6 +15,10 @@ export class CommentRepository implements ICommentRepository {
     private readonly commentModel: Model<CommentEntity>
   ) {}
 
+  async findCommentById(comment_id: string): Promise<CommentEntity> {
+    return await this.commentModel.findOne({ id: comment_id }).exec();
+  }
+
   async findCommentsByPostId(post_id: string): Promise<CommentEntity[]> {
     return this.commentModel.find({ post_id, deleted_at: null }).exec();
   }
@@ -34,5 +38,14 @@ export class CommentRepository implements ICommentRepository {
 
     await created_comment.save();
     return created_comment;
+  }
+
+  async deleteComment(comment_id: string): Promise<void> {
+    await this.commentModel.updateOne(
+      { id: comment_id },
+      {
+        deleted_at: new Date().getTime(),
+      }
+    );
   }
 }

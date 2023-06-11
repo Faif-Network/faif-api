@@ -129,6 +129,28 @@ export class PostController {
     };
   }
 
+  @Delete('/posts/:post_id/comments/:comment_id')
+  @UseGuards(JwtAuthGuard)
+  async deleteComment(@Req() req) {
+    const { user_id } = req.user;
+    const { post_id, comment_id } = req.params;
+
+    if (!post_id) {
+      throw new HttpException('Post id is required', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!comment_id) {
+      throw new HttpException('Comment id is required', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.feedService.deleteComment(comment_id, user_id);
+
+    return {
+      message: 'Comment deleted successfully',
+      data: null,
+    };
+  }
+
   @Post('/posts/:post_id/likes')
   @UseGuards(JwtAuthGuard)
   async likePost(@Req() req) {

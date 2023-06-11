@@ -10,7 +10,7 @@ export interface IPostRepository {
   findPostsByUserId(user_id: string): Promise<PostEntity[] | null>;
   incrementNumLikes(id: string): Promise<void>;
   incrementNumComments(id: string): Promise<void>;
-  incrementNumShares(id: string): Promise<void>;
+  decrementNumComments(id: string): Promise<void>;
 }
 
 @Injectable()
@@ -145,15 +145,16 @@ export class PostRepository implements IPostRepository {
       .exec() as any;
   }
 
-  incrementNumShares(id: string): Promise<void> {
+  decrementNumComments(id: string): Promise<void> {
     return this.postModel
       .findOneAndUpdate(
         {
           id,
           deleted_at: null,
+          num_comments: { $gt: 0 },
         },
         {
-          $inc: { num_shares: 1 },
+          $inc: { num_comments: -1 },
         }
       )
       .exec() as any;

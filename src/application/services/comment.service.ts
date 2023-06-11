@@ -11,6 +11,10 @@ export class CommentService {
     private readonly userService: UserService
   ) {}
 
+  async findCommentById(comment_id: string) {
+    return this.commentRepository.findCommentById(comment_id);
+  }
+
   async getCommentsByPostId(post_id: string, populate?: string[]) {
     const post = await this.postRepository.findPostById(post_id);
     if (!post) {
@@ -44,6 +48,14 @@ export class CommentService {
       user_id: data.user_id,
       post_id: post.id,
     });
+  }
+
+  async deleteComment(comment_id: string) {
+    const comment = await this.commentRepository.findCommentById(comment_id);
+    if (!comment) {
+      throw new HttpException('Comment not found', 404);
+    }
+    await this.commentRepository.deleteComment(comment_id);
   }
 }
 

@@ -123,6 +123,22 @@ export class PostService {
     ]);
   }
 
+  async deleteComment(comment_id: string, user_id: string): Promise<void> {
+    const comment = await this.commentService.findCommentById(comment_id);
+    if (!comment) {
+      throw new HttpException('Comment not found', 404);
+    }
+
+    if (comment.user_id !== user_id) {
+      throw new HttpException('Unauthorized', 401);
+    }
+
+    await Promise.all([
+      this.commentService.deleteComment(comment_id),
+      this.postRepository.decrementNumComments(comment.post_id),
+    ]);
+  }
+
   async likePost(post_id: string, user_id: string): Promise<void> {
     const like_exists = await this.likeService.findLikeByPostIdAndUserId(
       post_id,
