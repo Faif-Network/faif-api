@@ -41,7 +41,7 @@ export class UserEntity {
   @Prop({ required: true, unique: false, index: false })
   updated_at: number;
 
-  @Prop({ required: true, unique: false, index: false })
+  @Prop({ required: false, unique: false, index: false })
   community_id: string;
 
   community?: {

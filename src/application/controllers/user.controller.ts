@@ -32,13 +32,15 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   async update(@Req() req, @Body() body) {
     const { user_id } = req.user;
-    const { username, name, last_name, avatar, biography } = body;
+    const { username, name, last_name, avatar, biography, community_slug } =
+      body;
     const user = await this.userService.update(user_id, {
       username,
       name,
       last_name,
       avatar,
       biography,
+      community_id: community_slug,
     });
     return {
       message: 'User updated successfully',

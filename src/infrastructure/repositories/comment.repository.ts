@@ -34,6 +34,7 @@ export class CommentRepository implements ICommentRepository {
       created_at: new Date().getTime(),
       num_likes: comment.num_likes,
       post_id: comment.post_id,
+      deleted_at: null,
     });
 
     await created_comment.save();
