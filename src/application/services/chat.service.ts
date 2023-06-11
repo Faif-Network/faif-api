@@ -41,7 +41,6 @@ export class ChatService {
     return {
       chat_id: chat.id,
       users: chat.users,
-      messages: chat.messages,
       created_at: chat.created_at,
     };
   }
@@ -56,16 +55,6 @@ export class ChatService {
       created_at: new Date().getTime(),
       updated_at: new Date().getTime(),
     });
-  }
-
-  async sendMessage(data: SendMessageDTO) {
-    const { chat_id, sender, receiver, message } = data;
-    return await this.chatRepository.sendMessage(
-      chat_id,
-      sender,
-      receiver,
-      message
-    );
   }
 }
 

@@ -47,22 +47,4 @@ export class ChatRepository {
     await created_chat.save();
     return created_chat;
   }
-
-  async sendMessage(
-    chat_id: string,
-    sender: string,
-    receiver: string,
-    message: string
-  ): Promise<ChatEntity> {
-    const chat = await this.chatModel.findOne({ id: chat_id }).exec();
-
-    chat.messages.push({
-      sender: sender,
-      receiver: receiver,
-      message: message,
-      created_at: new Date().getTime(),
-    });
-    await chat.save();
-    return chat;
-  }
 }
