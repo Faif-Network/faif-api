@@ -22,6 +22,9 @@ export class CommentEntity {
 
   @Prop({ required: true, default: 0 })
   num_likes: number;
+
+  @Prop({ required: true, default: new Date().getTime() })
+  deleted_at: number;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(CommentEntity);
